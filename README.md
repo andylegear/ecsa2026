@@ -1,6 +1,34 @@
-# LaTeX Setup for VS Code
+# ECSA 2026 Industry Track — Paper, Poster & Presentation Artefacts
 
-This folder contains a sample LaTeX project configured for VS Code.
+## About This Project
+
+This repository contains the LaTeX sources, poster, and conference presentation for the paper:
+
+> **"A Lock-Free, Non-blocking, In-line Processing Architecture for High Throughput and Regulatory Compliant Blockchain Trading Applications"**
+> Andrew Le Gear, Jim Buckley, Tawny Whatmore, Ashish Sai
+> ECSA 2026 Industry Track, Bolzano, Italy (paper ID 130)
+
+The paper addresses a core tension in **Regulated DeFi (R-DeFi)**: blockchain trading systems need to be simultaneously high-throughput and regulatory compliant, but off-chain compliance checks (KYC/AML, trade surveillance) and on-chain settlement pull system design in opposite directions. Naive parallelisation is also constrained by Ethereum's strict per-account nonce ordering, which caps throughput gains and can shift bottlenecks into server-side lock contention rather than removing them.
+
+To investigate this, five blockchain trading architecture variants were implemented and empirically benchmarked — from a sequential single-threaded baseline through to a **lock-free, symbol-sharded, multi-wallet design** (inspired by the LMAX Disruptor pattern from high-frequency trading), which achieved the highest throughput of the variants tested. The companion benchmarking codebase and empirical results live in a separate repository: [blockchain-trading-architectures](https://github.com/HorizonFintex/blockchain-trading-architectures).
+
+**This repository is the writing/dissemination side of that work** — the academic paper, the conference poster, and the 10-minute Industry Track talk (slides + PDF/PPTX exports) built from it, rather than the benchmarking code itself.
+
+## Repository Structure
+
+| Path | Contents |
+|---|---|
+| `main.tex`, `sections/` | Main paper source (LNCS format) |
+| `poster.tex` | Conference poster source |
+| `ecsa2026-presentation/` | Slidev-based 10-minute talk (`slides.md`, `style.css`, PDF/PPTX exports) |
+| `submission/` | Camera-ready and source packages submitted to ECSA 2026 |
+| `sources/` | Working drafts/notes per paper section (intro, related work, methodology, results, threats, conclusions) |
+| `revisions/` | Reviewer feedback and revision tracking |
+| `references.bib`, `paper_references.bib` | Bibliography |
+
+## LaTeX Setup for VS Code
+
+This folder is also configured as a general-purpose LaTeX project for VS Code.
 
 ## 📋 Prerequisites
 
