@@ -1,0 +1,29 @@
+% ============================================
+% VIII. THREATS TO VALIDITY
+% ============================================
+\section{Threats to Validity}
+
+\label{sec:threats}
+
+In any empirical study, it is crucial to acknowledge the limitations that may affect the interpretation and generalizability of the findings. We follow the widely accepted framework for validity in empirical research, which categorizes threats into internal, construct, and external validity~\cite{shadish2002experimental}.
+
+\subsection{Internal Validity}
+
+Internal validity refers to the confidence that the observed effects are indeed caused by our architectural changes, rather than by confounding variables~\cite{shadish2002experimental}. We strengthened internal validity through our \textit{incremental ablation study}, which allowed us to isolate the impact of each architectural modification. Furthermore, all experiments were conducted on a \textit{dedicated, controlled testbed}, ensuring that external factors like network fluctuations or co-located processes did not interfere with the measurements. The consistent gas usage across architectures further suggests that the performance differences were not due to variations in on-chain computational cost.
+
+\subsection{Construct Validity}
+
+Construct validity concerns how well our measurements capture the theoretical concepts they are intended to represent~\cite{shadish2002experimental}. Our primary metrics, \textit{throughput, latency, and block utilization}, are standard, well-understood indicators of system performance in distributed systems and blockchain research~\cite{hennessy2017computer}, which supports the validity of our constructs. However, our workload, while representative, is a simplification. It consists of a fixed number of atomic trades distributed evenly across symbols and does not model more complex, bursty trading patterns that might occur in a live environment. Therefore, while our metrics are valid, the specific performance numbers are tied to this particular workload.
+
+\subsection{External Validity}
+
+External validity addresses the generalizability of our results to other populations, settings, and times~\cite{shadish2002experimental}. The most significant threat to this study lies in the generalizability from our testbed to real-world systems. Our experiments were conducted on a \textit{private Ethereum network with an IBFT 2.0 consensus mechanism and a fixed 4-second block time}. This environment is not representative of the public Ethereum mainnet, which features variable gas prices, unpredictable network congestion, and a different consensus model (Proof-of-Stake).
+
+However, it is crucial to note that our research is not intended to optimize for the public mainnet. Rather, our work targets the significant and growing domain of \textit{private and permissioned blockchains}, which are widely used in enterprise settings such as finance, supply chain, and healthcare~\cite{lewis2017blockchain}. These systems are specifically designed to provide a controlled environment with higher throughput and lower latency for business-critical applications~\cite{hyperledgerFabricDoc}. Therefore, our choice of a private, permissioned testbed aligns directly with our target application domain.
+
+While the fundamental principles we have identified, such as nonce management bottlenecks, server-side contention, and the benefits of sharding, should generalize to other blockchain systems, the precise quantitative improvements are specific to our testbed conditions. The 125-fold improvement represents the full ablation from a deliberately naive baseline; the more generalizable finding is the 2.8$\times$ improvement over conventional async architectures and the demonstration that a well-designed submission layer can sustain rates exceeding the blockchain's gas-based theoretical capacity. As research on testbed evaluations has shown, results from controlled environments may not always translate directly to the complexities of different network configurations~\cite{allman2010pitfalls}. Future work should aim to validate these architectural patterns on other permissioned blockchain platforms, such as Hyperledger Fabric, to further establish their generalizability within the enterprise context.
+
+\subsection{Impact on Research Question Validity}
+
+These threats affect our research questions to varying degrees. \textbf{RQ1}'s answer (31.19~tx/sec throughput ceiling) is tightly coupled to our specific testbed; the absolute number will differ on other platforms, though the \textit{pattern} of migrating bottlenecks should remain valid. \textbf{RQ2}'s findings on adapting HFT patterns are more generalizable, as lock-free data structures and symbol-sharding are platform-agnostic techniques; however, the specific latency improvements may vary with different consensus mechanisms. \textbf{RQ3}'s conclusions about the relationship between architecture and latency are the most robust, as the 9$\times$ latency explosion from server-side contention represents a fundamental systems phenomenon that should manifest across platforms, even if the precise magnitude differs.
+

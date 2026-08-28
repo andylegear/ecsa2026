@@ -1,0 +1,17 @@
+% ============================================
+% VIII. THREATS TO VALIDITY
+% ============================================
+\section{Threats to Validity}
+
+\label{sec:threats}
+
+We follow the framework of Shadish et al.~\cite{shadish2002experimental} to categorize validity threats.
+
+\textbf{Internal Validity:} We strengthened internal validity through our incremental ablation study, isolating each architectural modification's impact. All experiments ran on a dedicated testbed, and consistent gas usage across architectures confirms that performance differences stem from architectural changes rather than on-chain computational variance.
+
+\textbf{Construct Validity:} Our metrics—throughput, latency, and block utilization—are standard performance indicators~\cite{hennessy2017computer}. However, our workload of fixed atomic trades evenly distributed across symbols is a simplification; bursty real-world patterns may yield different results.
+
+\textbf{External Validity:} Our experiments used a private Ethereum network (IBFT 2.0, 4-second blocks), not the public mainnet. This is intentional: we target private/permissioned blockchains used in enterprise settings~\cite{lewis2017blockchain,androulaki2018fabric}. While the principles of nonce bottlenecks, server-side contention, and sharding benefits should generalize, precise quantitative improvements are testbed-specific. The 2.8$\times$ improvement over conventional architectures and the ability to sustain rates exceeding the blockchain's theoretical capacity are the more generalizable findings~\cite{choffnes2010pitfalls}.
+
+\textbf{Research Question Impact.} RQ1's absolute throughput (31.19~tx/sec) is platform-specific, though the migrating bottleneck pattern should persist. RQ2's HFT adaptations (lock-free structures, symbol-sharding) are platform-agnostic. RQ3's 9$\times$ latency increase from contention represents a fundamental systems phenomenon that should manifest across platforms.
+

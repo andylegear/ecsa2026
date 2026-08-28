@@ -1,0 +1,51 @@
+% ============================================
+% V. EXPERIMENTAL METHODOLOGY
+% ============================================
+\section{Experimental Methodology}
+\label{sec:methodology}
+
+To systematically evaluate the performance of our proposed trading architecture, we designed an incremental ablation study. Ablation studies, originally developed in neuroscience to understand complex biological systems, have become a standard methodology in systems research for isolating the performance impact of individual components~\cite{meyes2019ablation}. Our approach was to build upon a naive baseline architecture, introducing one key optimization at each stage. This allowed us to precisely isolate and quantify the performance impact of distinct system bottlenecks, from network I/O and blockchain-level nonce contention to server-side resource locking. This methodology directly supports \textbf{contribution C3}: a systematic ablation study that isolates and quantifies performance bottlenecks, demonstrating how resolving one constraint can expose another.
+
+The ablation study methodology is particularly well-suited to our research goals. Rather than attempting to optimize all components simultaneously, which would make it difficult to understand which optimizations actually matter, we systematically remove constraints one at a time. This approach, grounded in established performance evaluation practices~\cite{john2007performance}, allows us to identify which component is the limiting factor at each stage, then address it in the next iteration.
+
+\subsection{Architectural Configurations}
+
+We tested five distinct architectural configurations, each representing a logical step in the evolution from a simple, synchronous system to our proposed lock-free, symbol-sharded design. Each architecture was designed to test a specific hypothesis about system performance, following the principle of isolating one variable at a time~\cite{john2007performance}.
+
+\textbf{Architecture~1: Sequential, Synchronous, Single-Wallet (Baseline).}
+This architecture represents the most basic implementation. A single thread submits a transaction and waits synchronously for it to be mined and confirmed before submitting the next. Our hypothesis was that this design would be severely limited by the blockchain's block time, establishing a performance floor.
+
+\textbf{Architecture~2: Sequential, Asynchronous, Single-Wallet.}
+Here, we decoupled submission from confirmation. The main thread submits transactions to the mempool without waiting, while a separate background thread polls for mining status. We hypothesized that this would provide a substantial throughput increase by removing the block time from the submission loop, thereby isolating the benefit of asynchronous I/O.
+
+\textbf{Architecture~3: Multi-Threaded, Asynchronous, Single-Wallet.}
+This architecture introduces parallelism by having multiple threads submit trades concurrently to a single blockchain wallet. Our hypothesis was that the performance gains would be marginal. Since EVM-based chains require strictly ordered nonces for transactions from a single wallet, we predicted that the wallet itself would become a serialization bottleneck.
+
+\textbf{Architecture~4: Unsynchronized Multi-Threaded, Multi-Wallet.}
+To overcome the nonce bottleneck, this architecture utilizes a pool of distinct wallets, allowing for true parallel submission. However, threads select wallets without any coordination or awareness of the trade symbol. We hypothesized that this would expose a severe server-side contention issue, leading to high latency as threads compete for shared resources.
+
+\textbf{Architecture~5: Symbol-Sharded, Lock-Free, Multi-Wallet (Proposed).}
+This is our proposed novel architecture. Submissions are partitioned by their trading symbol, and each symbol is assigned to a dedicated, lock-free execution queue. Our hypothesis was that by ensuring trades for a specific symbol are processed sequentially but in parallel with other symbols, this design would maximize throughput while minimizing the latency variance caused by server-side contention.
+
+\subsection{Mapping to Research Questions}
+
+Our ablation study is structured to systematically answer each research question. \textbf{RQ1} (throughput ceiling and shifting bottlenecks) is addressed by progressively optimizing Architectures~1 through~5 and observing how the limiting factor migrates from blockchain constraints to server-side contention. \textbf{RQ2} (adapting HFT patterns to blockchain) is specifically tested in Architectures~3 through~5, where we introduce and refine lock-free concurrency techniques under blockchain's nonce constraints. \textbf{RQ3} (architectural design vs. latency) is evaluated through latency measurements across all variants, with particular attention to the latency explosion in Architecture~4 and its resolution in Architecture~5.
+
+\subsection{Performance Metrics}
+
+To assess the operational viability of each architecture, we focused on three key metrics that balance raw speed with reliability and efficiency~\cite{john2007performance}.
+
+\textbf{Overall Throughput (tx/sec):} This measures the rate at which valid transactions are successfully mined and confirmed. It is the primary indicator of system capacity.
+
+\textbf{Transaction Latency (seconds):} This is the total time from trade submission to final confirmation on the blockchain. We tracked both the \textbf{Average} latency and the \textbf{P99} (99th percentile) latency. While the average provides a baseline, P99 is critical for understanding worst-case performance and identifying tail latency issues caused by hidden resource contention~\cite{dean2013tail}.
+
+\textbf{Block Utilization (tx/block):} This measures the average number of our transactions packed into each mined block. It serves as a proxy for network efficiency, indicating how effectively the submission architecture is saturating the available block space.
+
+\subsection{Test Environment}
+
+Our test workload consisted of submitting 1,000 atomic trade operations, distributed across ten high-volume equity symbols (AAPL, AMD, AMZN, GOOGL, INTC, META, MSFT, NFLX, NVDA, TSLA), to a smart contract on a private Ethereum network. The network utilized an IBFT~2.0 consensus mechanism with a 4-second block time. The application server and test harness were implemented in C\# using .NET's \texttt{ConcurrentQueue<T>} for lock-free queuing and \texttt{Nethereum} for Ethereum RPC communication. Tests were run on a high-performance workstation (Intel i7-13700H with 64GB RAM) to ensure the submission client was not a bottleneck.
+
+\textbf{Relationship to Production System.} The architecture under study is the same design deployed by our industrial partner, Horizon Globex Ireland, for the Horizon Globex trading platform. While the experiments were conducted on a dedicated test network to enable controlled measurement and avoid affecting production systems, the codebase, architectural patterns, and component designs are identical to those in production use. This industrial grounding distinguishes our work from purely academic prototypes: the findings reflect engineering decisions that have been validated under real-world operational constraints.
+
+Each test run submitted exactly 1,000 transactions and measured the time from the first submission to the final confirmation. The test harness verified that all transactions were successfully mined and confirmed, achieving 100\% success rate across all architectures.
+

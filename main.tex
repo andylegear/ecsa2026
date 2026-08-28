@@ -1,0 +1,224 @@
+\documentclass[12pt,a4paper]{article}
+
+% ============================================
+% PACKAGES
+% ============================================
+\usepackage[utf8]{inputenc}          % UTF-8 encoding
+\usepackage[T1]{fontenc}             % Font encoding
+\usepackage{lmodern}                 % Modern Latin fonts
+\usepackage[english]{babel}          % Language settings
+\usepackage{amsmath,amssymb,amsthm}  % Math packages
+\usepackage{graphicx}                % Include images
+\usepackage{hyperref}                % Clickable links
+\usepackage{xcolor}                  % Colors
+\usepackage{listings}                % Code listings
+\usepackage{geometry}                % Page margins
+\usepackage{fancyhdr}                % Headers and footers
+\usepackage{lipsum}                  % Dummy text for demonstration
+
+% ============================================
+% DOCUMENT SETTINGS
+% ============================================
+\geometry{margin=1in}
+
+% Hyperlink settings
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={Sample LaTeX Document},
+    pdfauthor={Your Name},
+}
+
+% Code listing settings
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!60!black},
+    stringstyle=\color{red},
+}
+
+% Header/Footer
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Sample Document}
+\fancyhead[R]{\today}
+\fancyfoot[C]{\thepage}
+
+% ============================================
+% TITLE
+% ============================================
+\title{Sample \LaTeX{} Document}
+\author{Your Name}
+\date{\today}
+
+% ============================================
+% DOCUMENT BODY
+% ============================================
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This is a sample \LaTeX{} document demonstrating various features including mathematical equations, figures, tables, code listings, and bibliography references. Use this as a template to get started with your own documents. Now I have added more text to the abstract to ensure it spans multiple lines and provides a better overview of the document's content and purpose. Change 3. Change 4. Change 5.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+% --------------------------------------------
+\section{Introduction}
+% --------------------------------------------
+
+Welcome to \LaTeX{}! This document serves as a starting point for your \LaTeX{} journey in VS Code. \LaTeX{} is a powerful typesetting system widely used in academia and scientific publishing.
+
+\lipsum[1]
+
+% --------------------------------------------
+\section{Mathematics}
+% --------------------------------------------
+
+\LaTeX{} excels at typesetting mathematical equations.
+
+\subsection{Inline Math}
+
+Einstein's famous equation is $E = mc^2$. The quadratic formula is $x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$.
+
+\subsection{Display Math}
+
+The Gaussian integral:
+\begin{equation}
+    \int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}
+    \label{eq:gaussian}
+\end{equation}
+
+The Euler's identity:
+\begin{equation}
+    e^{i\pi} + 1 = 0
+    \label{eq:euler}
+\end{equation}
+
+A system of equations:
+\begin{align}
+    \nabla \cdot \mathbf{E} &= \frac{\rho}{\varepsilon_0} \\
+    \nabla \cdot \mathbf{B} &= 0 \\
+    \nabla \times \mathbf{E} &= -\frac{\partial \mathbf{B}}{\partial t} \\
+    \nabla \times \mathbf{B} &= \mu_0 \mathbf{J} + \mu_0 \varepsilon_0 \frac{\partial \mathbf{E}}{\partial t}
+\end{align}
+
+% --------------------------------------------
+\section{Lists}
+% --------------------------------------------
+
+\subsection{Itemized List}
+
+\begin{itemize}
+    \item First item
+    \item Second item
+    \item Third item with sub-items:
+    \begin{itemize}
+        \item Sub-item A
+        \item Sub-item B
+    \end{itemize}
+\end{itemize}
+
+\subsection{Enumerated List}
+
+\begin{enumerate}
+    \item Install a \LaTeX{} distribution (MiKTeX, TeX Live, or MacTeX)
+    \item Install the LaTeX Workshop extension in VS Code
+    \item Create a \texttt{.tex} file
+    \item Write your document
+    \item Compile and preview
+\end{enumerate}
+
+% --------------------------------------------
+\section{Tables}
+% --------------------------------------------
+
+\begin{table}[h]
+    \centering
+    \caption{Sample Table}
+    \label{tab:sample}
+    \begin{tabular}{|l|c|r|}
+        \hline
+        \textbf{Left} & \textbf{Center} & \textbf{Right} \\
+        \hline
+        Item 1 & Value 1 & 100 \\
+        Item 2 & Value 2 & 200 \\
+        Item 3 & Value 3 & 300 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+% --------------------------------------------
+\section{Figures}
+% --------------------------------------------
+
+To include a figure, use the following template (uncomment when you have an image):
+
+% \begin{figure}[h]
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{your-image.png}
+%     \caption{Your caption here}
+%     \label{fig:sample}
+% \end{figure}
+
+% --------------------------------------------
+\section{Code Listings}
+% --------------------------------------------
+
+Here's an example of a Python code listing:
+
+\begin{lstlisting}[language=Python, caption={Hello World in Python}]
+def hello_world():
+    """A simple hello world function."""
+    print("Hello, World!")
+    
+if __name__ == "__main__":
+    hello_world()
+\end{lstlisting}
+
+% --------------------------------------------
+\section{Cross-References}
+% --------------------------------------------
+
+You can reference equations, tables, and figures:
+\begin{itemize}
+    \item Equation~\ref{eq:gaussian} shows the Gaussian integral
+    \item Equation~\ref{eq:euler} is Euler's identity
+    \item Table~\ref{tab:sample} demonstrates table formatting
+\end{itemize}
+
+% --------------------------------------------
+\section{Conclusion}
+% --------------------------------------------
+
+This template demonstrates the basic features of \LaTeX{}. Happy typesetting!
+
+\lipsum[2]
+
+% --------------------------------------------
+\section{Citations and Bibliography}
+% --------------------------------------------
+
+Here are some example citations from the bibliography:
+
+\begin{itemize}
+    \item The foundational work on \TeX{} by Knuth~\cite{knuth1984}
+    \item The \LaTeX{} manual by Lamport~\cite{lamport1994}
+    \item Einstein's famous paper~\cite{einstein1905}
+    \item The official \LaTeX{} Project website~\cite{latexproject}
+    \item A sample conference paper~\cite{sample2023}
+\end{itemize}
+
+% Bibliography
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}

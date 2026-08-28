@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../blockchain-trading-architectures"
+		}
+	],
+	"settings": {
+		"latex-workshop.view.pdf.viewer": "tab",
+		"latex-workshop.synctex.afterBuild.enabled": true,
+		"latex-workshop.intellisense.package.enabled": true,
+		"latex-workshop.hover.preview.enabled": true,
+		"latex-workshop.hover.preview.scale": 1
+	}
+}

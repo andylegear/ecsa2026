@@ -1,0 +1,29 @@
+% ============================================
+% I. INTRODUCTION
+% ============================================
+\section{Introduction}
+\label{sec:intro}
+
+Decentralized finance (DeFi) and traditional financial markets have converged to create Regulated DeFi (R-DeFi), which seeks to harness blockchain's transparency and immutability while adhering to regulatory frameworks~\cite{zetzsche2020defi,jamithireddy2025hybrid}. A core tension underpins this space: compliance requirements (Know Your Customer/KYC, Anti-Money Laundering/AML, trade surveillance) are computationally intensive and require confidential off-chain data, making them ill-suited for direct on-chain implementation~\cite{sak2024kyc,wolfsberg2022framework}.
+
+Public blockchains like Ethereum process only 15--30~tx/sec on their base layer~\cite{schaffer2019performance,xu2021slimchain}, and embedding stateful compliance logic on-chain is prohibitively slow and expensive~\cite{eren2025onchain}. This creates an ``all or nothing'' dilemma: full decentralization with non-compliance, or centralization that sacrifices blockchain's auditability. Hybrid architectures offer a pragmatic middle ground~\cite{zhu2026hybrid}.
+
+We advocate a two-layer hybrid architecture that separates responsibilities between an off-chain server and an on-chain ledger. The off-chain layer serves as a high-performance compliance and order matching engine, while the blockchain handles immutable, final settlement. This mirrors established enterprise adoption patterns where the blockchain acts as a shared, trusted backend rather than a world computer~\cite{jamithireddy2025hybrid}. Importantly, this is not merely theoretical: our industrial partner, Horizon Globex Ireland, deploys \textbf{Architecture~5} (the symbol-sharded, lock-free design) in production for the Horizon Globex trading platform. Our empirical study uses a dedicated test environment replicating this production system, allowing rigorous performance analysis without affecting live operations. Yet even this separation introduces non-trivial performance bottlenecks in the transaction submission pipeline, an area we address through the following research questions:
+
+\begin{itemize}
+    \item \textbf{RQ1:} What throughput ceiling does a two-layer hybrid blockchain trading architecture face given gas-based block limits and regulatory constraints, and what are the primary bottlenecks that shift as the system is optimized?
+    \item \textbf{RQ2:} How can lock-free concurrency patterns from high-frequency trading (HFT) be adapted to the unique constraints of blockchain transaction submission, such as nonce sequencing?
+    \item \textbf{RQ3:} What is the relationship between architectural design choices in the submission layer and the end-to-end latency of trade settlement?
+\end{itemize}
+
+We present a systematic ablation study of five distinct architectural variants, from a naive synchronous baseline to a highly optimized, lock-free, symbol-sharded design. Our contributions include:
+
+\begin{enumerate}
+    \item A two-layer hybrid architecture for R-DeFi featuring a symbol-sharded, lock-free transaction submission model that balances regulatory compliance, high-throughput performance, and decentralization principles, currently deployed in live trading environments.
+    \item Empirical evidence that this architecture achieves 31.19~tx/sec, a \textbf{2.8$\times$ improvement} over conventional asynchronous multi-threaded architectures, with the submission layer sustaining rates exceeding the blockchain's gas-based theoretical capacity.
+    \item A systematic ablation study isolating and quantifying performance bottlenecks, revealing how resolving one constraint can expose another. Most notably, we observe a 9$\times$ latency increase when a blockchain bottleneck was removed.
+    \item Evidence that on-chain nonce contention limits naive parallelism to a 36\% throughput gain, validating Amdahl's Law in a blockchain context~\cite{amdahl1967validity}.
+    \item The first documented empirical evidence of server-side contention emerging directly from successful resolution of a blockchain-side bottleneck, a finding with implications for future system designers.
+\end{enumerate}
+
+

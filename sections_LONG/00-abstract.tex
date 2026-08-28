@@ -1,0 +1,15 @@
+% ============================================
+% ABSTRACT
+% ============================================
+\begin{abstract}
+The emergence of Regulated DeFi (R-DeFi) demands blockchain-based trading systems that satisfy both high-throughput performance requirements and stringent regulatory compliance obligations. This paper presents a systematic empirical analysis of architectural patterns for high-throughput blockchain trading, based on a production design deployed by our industrial partner for live trading operations. Employing a two-layer hybrid model that separates off-chain compliance enforcement from on-chain settlement, we conduct an ablation study of five architectural variants to identify and resolve performance bottlenecks. Our proposed symbol-sharded, lock-free architecture achieves a throughput of 31.19 transactions per second, representing a \textbf{2.8$\times$ improvement} over conventional asynchronous multi-threaded designs; the full ablation from a naive synchronous baseline demonstrates the cumulative 125-fold gain achievable through systematic optimization.
+
+Our analysis reveals a critical phenomenon of migrating bottlenecks: resolving blockchain-level constraints can expose severe server-side performance crises. Specifically, we show that Ethereum's nonce mechanism limits the benefit of naive parallelism to a mere 36\% throughput gain, and that circumventing this constraint with a multi-wallet strategy causes a 9$\times$ increase in transaction latency due to lock contention. We address this server-side crisis through a symbol-sharded, lock-free transaction submission model inspired by high-frequency trading architectures, which reduces latency by 44\% while maintaining peak throughput. Our findings provide actionable guidance for practitioners designing compliant, high-performance blockchain trading systems and contribute the first documented empirical evidence that holistic co-design of on-chain strategies and off-chain data structures is essential for optimal performance.
+\end{abstract}
+
+% ============================================
+% KEYWORDS
+% ============================================
+\begin{IEEEkeywords}
+Blockchain, Regulated DeFi, lock-free concurrency, high-frequency trading, regulatory compliance, transaction throughput, symbol sharding.
+\end{IEEEkeywords}

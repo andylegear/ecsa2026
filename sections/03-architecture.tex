@@ -1,0 +1,40 @@
+% ============================================
+% III. SYSTEM ARCHITECTURE AND REGULATORY CONSTRAINTS
+% ============================================
+\section{System Architecture and Regulatory Constraints}
+\label{sec:architecture}
+
+Horizon Globex Ireland DAC is a fintech software services company operating blockchain-backed trading and exchange systems across multiple jurisdictions. Its deployments include automated trading systems in the United States and the Upstream platform in the Seychelles, which supports MERJ, a tier-one regulated stock exchange. Its core offering is a suite of blockchain-backed market trading and securities software services designed to satisfy the compliance requirements of regulated financial markets. The architecture described in this paper was designed to meet the throughput and regulatory demands of this production environment.
+
+Our proposed system employs a two-layer hybrid architecture designed to balance high-performance trading demands with stringent regulatory requirements. This model segregates responsibilities between a high-throughput off-chain server and a secure on-chain settlement layer, consistent with emerging patterns in enterprise blockchain adoption~\cite{jamithireddy2025hybrid}. This architecture represents our \textbf{first contribution (C1)} and directly addresses \textbf{RQ1}: characterizing the throughput ceiling imposed by gas-based block limits under compliance requirements.
+
+\subsection{Two-Layer Architectural Model}
+
+\textbf{Layer 1: Off-Chain Order Management Server.} This layer is a centralized, high-performance server responsible for all real-time trading operations. Its duties include user authentication, order ingestion, compliance checks (e.g., KYC/AML, trading limits), order matching, and maintaining the live order book. By handling these operations off-chain, we leverage the speed and scalability of traditional centralized systems for tasks that do not require immediate blockchain consensus, a common strategy in Layer 2 scaling solutions~\cite{xu2021slimchain}.
+
+\textbf{Layer 2: On-Chain Settlement and Finality Layer.} This layer consists of a private, permissioned Ethereum-based blockchain network running an IBFT 2.0 consensus mechanism. Its sole responsibility is to provide a secure, immutable, and auditable ledger for the final settlement of matched trades. The \texttt{ATS.sol} smart contract serves as the on-chain automated trading system, providing a simple \texttt{bid} function to record the settlement of a trade.
+
+\subsection{Data Flow and Justification}
+
+The data flow proceeds as follows: (1)~clients submit orders to the off-chain server; (2)~the server validates against compliance rules and matches against the order book; (3)~matched trades are submitted to the \texttt{ATS.sol} smart contract; (4)~IBFT~2.0 consensus provides finality and a tamper-proof audit trail~\cite{kuhn2019rethinking}. The two-layer model is illustrated in Figure~\ref{fig:architecture}(a).
+
+Table~\ref{tab:architecture-justification} summarizes the key benefits of this hybrid design.
+
+\begin{table}[htbp]
+\centering
+\caption{Justification for the Hybrid Architecture}
+\label{tab:architecture-justification}
+\begin{tabular}{@{}p{0.18\textwidth}p{0.75\textwidth}@{}}
+\toprule
+\textbf{Factor} & \textbf{Benefit} \\
+\midrule
+Regulatory Compliance & Enforces KYC/AML checks \textit{before} immutable recording~\cite{fincen2024kyc}; enables pre-trade enforcement vs.\ post-facto in decentralized models \\
+\addlinespace
+Performance & Reserves blockchain throughput for settlement; Architecture~1 baseline (0.25~tx/sec) confirms on-chain-only is unworkable~\cite{khan2021blockchain} \\
+\addlinespace
+Cost-Effectiveness & Minimizes on-chain transactions, reducing computational load and enabling higher settlement throughput \\
+\addlinespace
+Data Privacy & Protects open order privacy; only settled trades are broadcast to the blockchain \\
+\bottomrule
+\end{tabular}
+\end{table}

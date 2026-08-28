@@ -1,0 +1,91 @@
+% This is samplepaper.tex, a sample chapter demonstrating the
+% LLNCS macro package for Springer Computer Science proceedings;
+% Version 2.21 of 2022/01/12
+%
+\documentclass[runningheads]{llncs}
+%
+\usepackage[T1]{fontenc}
+% T1 fonts will be used to generate the final print and online PDFs,
+% so please use T1 fonts in your manuscript whenever possible.
+% Other font encondings may result in incorrect characters.
+%
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{bbding}
+% Used for displaying a sample figure. If possible, figure files should
+% be included in EPS format.
+%
+% If you use the hyperref package, please uncomment the following two lines
+% to display URLs in blue roman font according to Springer's eBook style:
+%\usepackage{color}
+%\renewcommand\UrlFont{\color{blue}\rmfamily}
+%\urlstyle{rm}
+%
+\begin{document}
+%
+\title{A Lock Free, Non-blocking, In Line Processing Architecture for High Throughput and Regulatory Compliant Blockchain Trading Applications}
+%
+\titlerunning{Lock Free Blockchain Trading Architecture}
+%
+\author{Andrew Le Gear\inst{1}\orcidID{0000-0002-0886-7683}\textsuperscript{\Letter} \and
+Jim Buckley\inst{1}\orcidID{0000-0001-6928-6746} \and
+Tawny Whatmore\inst{2} \and
+Ashish Sai\inst{3}\orcidID{0000-0003-3639-2854}}
+%
+\authorrunning{Le Gear et al.}
+%
+\institute{CSIS Department, Lero, University of Limerick, Ireland
+\email{\{andrew.p.legear,jim.buckley\}@ul.ie} \and
+Horizon Globex Ireland, Ireland
+\email{tawny.whatmore@horizon-globex.ie} \and
+Department of Advanced Computing Sciences, Maastricht University, Netherlands
+\email{ashish.sai@maastrichtuniversity.nl}}
+%
+\maketitle
+%
+\begin{abstract}
+Regulated DeFi demands blockchain trading systems that satisfy both high-throughput performance and regulatory compliance. We present an empirical analysis of architectural patterns for high throughput blockchain trading, based on a production system deployed for live trading operations. Using a two-layer hybrid model separating off-chain compliance from on-chain settlement, we conduct an ablation study of five architectural variants. Our symbol-sharded, lock-free architecture achieves 31.19 tx/sec, a \textbf{2.8$\times$ improvement} over conventional designs and 125-fold gain from naive baselines.
+
+Our analysis reveals migrating bottlenecks: resolving blockchain constraints exposes server-side contention. Ethereum's nonce mechanism limits naive parallelism to 36\% throughput gain, while circumventing it with multiple wallets causes 9$\times$ latency increases due to lock contention. Our lock-free transaction submission model, inspired by HFT architectures, reduces latency by 44\% while maintaining peak throughput. This demonstrates that holistic co-design of on-chain and off-chain components is necessary for optimal performance.
+
+\keywords{Blockchain \and Regulated DeFi \and Lock-free concurrency \and High-frequency trading \and Regulatory compliance \and Transaction throughput \and Symbol sharding}
+\end{abstract}
+%
+%
+%
+% ============================================
+% INCLUDE SECTIONS
+% ============================================
+
+\input{sections/01-introduction}
+\input{sections/02-related-work}
+\input{sections/03-architecture}
+\input{sections/04-components}
+\input{sections/06-theoretical}
+\input{sections/05-methodology}
+\input{sections/07-results}
+\input{sections/08-threats}
+\input{sections/09-conclusion}
+
+\begin{credits}
+\subsubsection{\ackname}
+This work is supported in part by Horizon Globex Ireland and by Science Foundation Ireland grant 13/RC/2094\_P2 to Lero, the Science Foundation Ireland Research Centre for Software.
+
+\subsubsection{Data Availability}
+The source code for all five architectural variants, the smart contract, and the experimental harness are publicly available at: \url{https://github.com/} \url{HorizonFintex/blockchain-trading-architectures}.
+
+\subsubsection{AI Usage Statement}
+Microsoft Copilot was used to assist with spelling, grammar, phraseology, and quality assurance during manuscript preparation and review. All intellectual content, analysis, and conclusions are the authors' own work. The authors bear full responsibility for the accuracy and integrity of this paper.
+
+\subsubsection{\discintname}
+The authors have no competing interests to declare that are relevant to the content of this article.
+\end{credits}
+%
+% ---- Bibliography ----
+%
+\bibliographystyle{splncs04}
+\bibliography{paper_references}
+
+\end{document}

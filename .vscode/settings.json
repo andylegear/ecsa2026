@@ -1,0 +1,163 @@
+{
+    // ============================================
+    // LaTeX Workshop Settings
+    // ============================================
+    
+    // Auto-build on save
+    "latex-workshop.latex.autoBuild.run": "onSave",
+    
+    // Recipe for building (pdflatex is most common)
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "pdflatex ➞ bibtex ➞ pdflatex × 2",
+            "tools": [
+                "pdflatex",
+                "bibtex",
+                "pdflatex",
+                "pdflatex"
+            ]
+        },
+        {
+            "name": "pdflatex",
+            "tools": [
+                "pdflatex"
+            ]
+        },
+        {
+            "name": "latexmk",
+            "tools": [
+                "latexmk"
+            ]
+        },
+        {
+            "name": "xelatex",
+            "tools": [
+                "xelatex"
+            ]
+        },
+        {
+            "name": "lualatex",
+            "tools": [
+                "lualatex"
+            ]
+        }
+    ],
+    
+    // Tools configuration
+    "latex-workshop.latex.tools": [
+        {
+            "name": "pdflatex",
+            "command": "pdflatex",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "%DOC%"
+            ]
+        },
+        {
+            "name": "bibtex",
+            "command": "bibtex",
+            "args": [
+                "%DOCFILE%"
+            ]
+        },
+        {
+            "name": "latexmk",
+            "command": "latexmk",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "-pdf",
+                "%DOC%"
+            ]
+        },
+        {
+            "name": "xelatex",
+            "command": "xelatex",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "%DOC%"
+            ]
+        },
+        {
+            "name": "lualatex",
+            "command": "lualatex",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "%DOC%"
+            ]
+        }
+    ],
+    
+    // Clean auxiliary files on build
+    "latex-workshop.latex.autoClean.run": "onBuilt",
+    "latex-workshop.latex.clean.method": "glob",
+    "latex-workshop.latex.clean.fileTypes": [
+        "*.aux",
+        "*.bbl",
+        "*.blg",
+        "*.idx",
+        "*.ind",
+        "*.lof",
+        "*.lot",
+        "*.out",
+        "*.toc",
+        "*.acn",
+        "*.acr",
+        "*.alg",
+        "*.glg",
+        "*.glo",
+        "*.gls",
+        "*.fls",
+        "*.log",
+        "*.fdb_latexmk",
+        "*.snm",
+        "*.nav",
+        "*.synctex.gz"
+    ],
+    
+    // PDF Viewer settings
+    "latex-workshop.view.pdf.viewer": "tab",
+    
+    // SyncTeX settings (click in PDF to jump to source)
+    "latex-workshop.synctex.afterBuild.enabled": true,
+    
+    // IntelliSense settings
+    "latex-workshop.intellisense.package.enabled": true,
+    "latex-workshop.intellisense.citation.backend": "bibtex",
+    
+    // Hover preview for math
+    "latex-workshop.hover.preview.enabled": true,
+    "latex-workshop.hover.preview.scale": 1.0,
+    
+    // ============================================
+    // Editor Settings for LaTeX
+    // ============================================
+    
+    // Word counter (requires Perl - now installed)
+    "latex-workshop.texcount.autorun": "onSave",
+    
+    "[latex]": {
+        "editor.wordWrap": "on",
+        "editor.formatOnSave": false,
+        "editor.suggestSelection": "recentlyUsedByPrefix"
+    },
+    
+    "[bibtex]": {
+        "editor.wordWrap": "on"
+    },
+    
+    // ============================================
+    // Spell Checking (if using Code Spell Checker)
+    // ============================================
+    "cSpell.enableFiletypes": [
+        "latex",
+        "bibtex"
+    ]
+}

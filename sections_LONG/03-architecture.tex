@@ -1,0 +1,42 @@
+% ============================================
+% III. SYSTEM ARCHITECTURE AND REGULATORY CONSTRAINTS
+% ============================================
+\section{System Architecture and Regulatory Constraints}
+\label{sec:architecture}
+
+Our proposed system employs a two-layer hybrid architecture designed to balance the high-performance demands of modern trading with the stringent regulatory and security requirements of financial markets. This model, which segregates responsibilities between a high-throughput off-chain server and a secure on-chain settlement layer, is consistent with emerging patterns in enterprise blockchain adoption where performance and compliance are paramount~\cite{jamithireddy2025hybrid}. This creates a system that is both fast and trustworthy.
+
+Critically, this architecture is not a hypothetical design: it represents the Horizon Globex trading platform deployed by our industrial partner, Horizon Globex Ireland, for live regulated trading operations. The experiments reported in this paper were conducted on a dedicated test environment that faithfully replicates the production architecture, enabling rigorous empirical analysis without affecting live trading systems. This industrial grounding ensures that our findings reflect real-world engineering constraints rather than idealized laboratory conditions.
+
+This architecture represents our \textbf{first contribution (C1)} and directly addresses the regulatory constraints central to \textbf{RQ1}: characterizing the throughput ceiling imposed by gas-based block limits under compliance requirements.
+
+\subsection{Two-Layer Architectural Model}
+
+The architecture is composed of two distinct layers:
+
+\textbf{Layer 1: Off-Chain Order Management Server.} This layer is a centralized, high-performance server responsible for all real-time trading operations. Its duties include user authentication, order ingestion, compliance checks (e.g., KYC/AML, trading limits), order matching, and maintaining the live order book. By handling these operations off-chain, we leverage the speed and scalability of traditional centralized systems for tasks that do not require immediate blockchain consensus, a common strategy in Layer 2 scaling solutions~\cite{rahouti2018bitcoin}.
+
+\textbf{Layer 2: On-Chain Settlement and Finality Layer.} This layer consists of a private, permissioned Ethereum-based blockchain network running an IBFT 2.0 consensus mechanism. Its sole responsibility is to provide a secure, immutable, and auditable ledger for the final settlement of matched trades. The \texttt{ATS.sol} smart contract serves as the on-chain automated trading system, providing a simple \texttt{bid} function to record the settlement of a trade.
+
+This separation of concerns is a critical design choice, enabling the system to meet the often-conflicting demands of performance and regulatory compliance~\cite{jamithireddy2025hybrid}. The two-layer model is illustrated in Figure~\ref{fig:architecture}(a).
+
+\subsection{Data Flow and Justification}
+
+The data flow is designed to optimize for both speed and security:
+
+\begin{enumerate}
+    \item \textbf{Order Placement:} Clients submit trade orders to the off-chain server.
+    \item \textbf{Off-Chain Processing:} The server validates the order against compliance rules and attempts to match it against the live order book.
+    \item \textbf{On-Chain Settlement:} Once a trade is matched, the server's transaction submission service constructs a formal blockchain transaction and submits it to the \texttt{ATS.sol} smart contract for settlement. This transaction serves as the definitive, immutable record of the trade.
+    \item \textbf{Finality:} The IBFT 2.0 consensus mechanism ensures that the transaction is included in a block and achieves finality, providing a tamper-proof audit trail~\cite{kuhn2019rethinking}.
+\end{enumerate}
+
+This hybrid architecture is justified by several key factors:
+
+\textbf{Regulatory Compliance.} Financial regulations mandate strict pre-trade checks, including Know Your Customer (KYC) and Anti-Money Laundering (AML) verification~\cite{fincen2024kyc}. By placing a centralized server at the entry point, we can enforce these rules \textit{before} a transaction is immutably recorded on the blockchain. This is a significant advantage over purely decentralized models where post-facto enforcement is often the only option.
+
+\textbf{Performance.} The performance of public blockchains is insufficient for the high-frequency nature of trading, a core concern in market microstructure theory~\cite{ohara1995market}. Our empirical results for Architecture~1 (0.25~tx/sec) demonstrate that a naive, synchronous on-chain approach is unworkable. By handling order matching off-chain, we reserve the blockchain's limited throughput for the critical task of settlement.
+
+\textbf{Cost-Effectiveness.} Gas fees on public blockchains make high-frequency on-chain operations prohibitively expensive. In our private network, while gas is not a direct monetary cost, it still represents a computational resource. Minimizing on-chain transactions reduces the overall computational load on the network, allowing for higher settlement throughput.
+
+\textbf{Data Privacy.} The off-chain layer can protect the privacy of open orders, which is a critical requirement in many trading strategies. Only settled trades, which are public by nature, are broadcast to the blockchain.

@@ -1,0 +1,43 @@
+% ============================================
+% V. EXPERIMENTAL METHODOLOGY
+% ============================================
+\section{Experimental Methodology}
+\label{sec:methodology}
+
+We designed an incremental ablation study to evaluate our proposed architecture. Ablation studies, originally developed in neuroscience to understand complex biological systems, have become a standard methodology in systems research for isolating the performance impact of individual components~\cite{meyes2019ablation}. Each stage introduces one key optimization, precisely isolating the impact of distinct bottlenecks: network I/O, nonce contention, and server-side locking. This methodology directly supports \textbf{contribution C3}: a systematic ablation study that isolates and quantifies performance bottlenecks, demonstrating how resolving one constraint can expose another.
+
+The ablation study methodology is particularly well-suited to our research goals. Rather than attempting to optimize all components simultaneously, which would make it difficult to understand which optimizations actually matter, we systematically remove constraints one at a time. This approach, grounded in established performance evaluation practices~\cite{john2007performance}, allows us to identify which component is the limiting factor at each stage, then address it in the next iteration.
+
+\subsection{Architectural Configurations}
+
+We tested five configurations, each introducing one key change from its predecessor:
+
+\textbf{Architecture~1 (Baseline):} Single-threaded, synchronous submission with blocking confirmation. This establishes the performance floor bounded by block time.
+
+\textbf{Architecture~2:} Decouples submission from confirmation via background polling. This isolates the benefit of asynchronous I/O.
+
+\textbf{Architecture~3:} Adds multi-threading to a single wallet. This tests whether parallelism helps despite nonce serialization.
+
+\textbf{Architecture~4:} Introduces a multi-wallet pool without coordination. This exposes server-side contention from uncoordinated thread access.
+
+\textbf{Architecture~5 (Proposed):} Symbol-sharded, lock-free queues with dedicated wallets per shard. This maximizes throughput while eliminating contention.
+
+\subsection{Evaluation Framework}
+
+Our ablation study maps directly to the research questions. \textbf{RQ1} (throughput ceiling) is addressed by observing how bottlenecks migrate from blockchain constraints to server-side contention across Architectures~1--5. \textbf{RQ2} (HFT adaptation) is tested in Architectures~3--5, where lock-free techniques operate under nonce constraints. \textbf{RQ3} (latency impact) is evaluated through latency measurements, particularly the sharp increase in Architecture~4 and its resolution in Architecture~5.
+
+We focus on three metrics~\cite{john2007performance}:
+\begin{itemize}
+    \item \textbf{Throughput (tx/sec):} Rate of successfully confirmed transactions.
+    \item \textbf{Latency:} Time from submission to confirmation; we report both average and P99 to capture tail latency~\cite{dean2013tail}.
+    \item \textbf{Block Utilization (tx/block):} Transactions per block, indicating network saturation efficiency.
+\end{itemize}
+
+\subsection{Test Environment}
+
+We submitted 1,000 atomic trade operations across ten high-volume equity symbols to a smart contract on a private Ethereum network. The network utilized an IBFT~2.0 consensus mechanism with a 4-second block time. The application server and test harness were implemented in C\# using .NET's \texttt{ConcurrentQueue<T>} for lock-free queuing and \texttt{Nethereum} for Ethereum RPC communication. Tests were run on a high-performance workstation (Intel i7-13700H with 64GB RAM) to ensure the submission client was not a bottleneck.
+
+\textbf{Relationship to Production System.} The architecture under study matches the design deployed by Horizon Globex Ireland in production. Though experiments ran on a dedicated test network, the codebase and architectural patterns are identical to production, grounding our findings in real-world engineering constraints rather than academic prototypes.
+
+Each test run submitted exactly 1,000 transactions and measured the time from the first submission to the final confirmation. The test harness verified that all transactions were successfully mined and confirmed, achieving 100\% success rate across all architectures.
+

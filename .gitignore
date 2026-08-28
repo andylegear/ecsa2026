@@ -1,0 +1,44 @@
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.xdv
+*.nav
+*.snm
+*.vrb
+
+# Node / Slidev
+node_modules/
+ecsa2026-presentation/dist/
+ecsa2026-presentation/slides-export/
+**/~$*
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Nested clone of a separate repo (managed independently)
+sources/blockchain-trading-architectures/
+
+# Personal / non-build content
+emails/
+decode_emails.py
+notification.txt
+ECSA2026-conference-info.md
+Comprehensive Reference Review — Final Edition.md
+Critique of LLM-Style Writing Patterns and Improvement Recommendations.md
+De-LLM-ise_ A Guide to Humanizing Academic and Professional Writing.md
+Screenshot 2026-06-15 150826.png
+poster-preview-1.png

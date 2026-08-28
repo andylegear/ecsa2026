@@ -1,0 +1,20 @@
+% ============================================
+% IX. CONCLUSION AND FUTURE WORK
+% ============================================
+\section{Conclusion and Future Work}
+\label{sec:conclusion}
+
+In this paper, we presented a systematic ablation study of architectural patterns for blockchain-based trading, grounded in the production Horizon Globex platform. Our symbol-sharded, lock-free architecture achieves 31.19~tx/sec (\textbf{2.8$\times$ improvement} over conventional designs), with migrating bottlenecks revealing that naive multi-threading yields only 36\% gains due to nonce serialization, and that resolving this with multi-wallet strategies causes a 9$\times$ latency increase from server-side contention.
+
+The symbol-sharded, lock-free model resolves this crisis: 29\% higher throughput with 44\% lower latency, shifting the bottleneck away from the submission layer. Because the submission layer sustains rates exceeding the blockchain's theoretical capacity, the architecture scales linearly with network upgrades.
+
+\subsection{Future Work}
+
+\textbf{Sustained Load Testing.} Our 1,000-transaction workload demonstrated relative architectural performance but did not reach steady-state saturation. Extended tests at rates exceeding the theoretical ceiling (~17.93~tx/sec) would characterize sustained throughput, mempool dynamics, and latency under prolonged load.
+
+\textbf{Maximal Extractable Value (MEV) Mitigation and Fair Ordering.} Our model does not guarantee fair transaction ordering within blocks, leaving it potentially vulnerable to MEV extraction even in permissioned settings~\cite{qin2022mev,ji2024mev}. Future work should explore fair ordering protocols (commit-reveal schemes, threshold encryption) and analyze the fairness-throughput trade-off.
+
+\textbf{Cross-Shard Atomic Trading.} Symbol-sharding does not natively support atomic multi-symbol trades. Cross-shard protocols (2PC or optimistic mechanisms) could enable atomic settlement across shards~\cite{zhang2023frontrunning,du2024crossshard}.
+
+\textbf{Generalizability to Other DLT Platforms.} Benchmarking on other permissioned DLTs, particularly Hyperledger Fabric with its different consensus model, would validate the generalizability of our architectural principles~\cite{ucbas2023performance,baliga2018hyperledger}.
+

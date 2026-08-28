@@ -1,0 +1,24 @@
+% ============================================
+% II. RELATED WORK AND BACKGROUND
+% ============================================
+\section{Related Work and Background}
+\label{sec:related}
+
+This work draws on three domains: blockchain scalability, concurrent system design, and high-frequency trading. We review prior work informing our experimental findings.
+
+\subsection{Blockchain Scalability and Sharding}
+
+Public blockchains face well-documented performance limitations~\cite{bez2019scalability,ucbas2023performance}. These studies attribute Ethereum's low throughput to inherent trade-offs between decentralization, security, and scalability, providing a theoretical model for the bottlenecks our baseline architecture empirically demonstrates at 0.25~tx/sec. Sharding, a technique for partitioning state across nodes, is a primary approach to address these limitations~\cite{fynn2018partitioning}. Our symbol-sharded architecture leverages domain-specific partitioning that avoids cross-shard communication overhead; empirical results are presented in Section~\ref{sec:results}.
+
+\subsection{Nonce Contention and Parallelization Limits}
+
+Nonce contention poses a key bottleneck in Ethereum transaction submission. The nonce mechanism requires strict sequential ordering per account, limiting parallelization~\cite{hu2023nonce}. As shown in Section~\ref{sec:results}, multi-threading against a single wallet yields only a modest throughput gain, empirically confirming this limitation. Alternative concurrency models, such as Paimani's ``wait-free'' approach~\cite{paimani2021sonicchain}, address contention through delegation, but our multi-wallet partitioning offers a more direct strategy, though it shifts the bottleneck to server-side contention if not managed with appropriate lock-free controls.
+
+\subsection{Lock-Free Architectures from High-Frequency Trading}
+
+Our approach to resolving server-side contention draws from high-frequency trading (HFT) principles. Cache thrashing and lock convoying are phenomena HFT systems carefully avoid~\cite{moir2018concurrent}. We apply the \textbf{LMAX Disruptor pattern}~\cite{thompson2011disruptor}, a lock-free ring buffer achieving sub-microsecond latency in traditional finance. As demonstrated in Section~\ref{sec:results}, adapting these techniques via symbol-sharded, lock-free queues overcomes blockchain-specific performance barriers~\cite{bilokon2023cpp,ng2018lockfree}.
+
+\subsection{Research Gap}
+
+Platform-level blockchain scalability research is extensive, but systematic application level analysis isolating specific bottlenecks (nonce contention, server-side locking) remains sparse. Lock-free HFT architectures have not been widely adapted to blockchain's unique constraints, and how submission-layer design affects end-to-end settlement latency lacks empirical characterization. Our ablation study addresses these gaps.
+

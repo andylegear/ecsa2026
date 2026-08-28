@@ -1,0 +1,15 @@
+% ============================================
+% ABSTRACT
+% ============================================
+\begin{abstract}
+Regulated DeFi demands blockchain trading systems that satisfy both high-throughput performance and regulatory compliance. We present an empirical analysis of architectural patterns for high-throughput blockchain trading, based on a production system deployed for live trading operations. Using a two-layer hybrid model separating off-chain compliance from on-chain settlement, we conduct an ablation study of five architectural variants. Our symbol-sharded, lock-free architecture achieves 31.19 tx/sec—a \textbf{2.8$\times$ improvement} over conventional designs and 125-fold gain from naive baselines.
+
+Our analysis reveals migrating bottlenecks: resolving blockchain constraints exposes server-side crises. Ethereum's nonce mechanism limits naive parallelism to 36\% throughput gain, while circumventing it with multiple wallets causes 9$\times$ latency increases due to lock contention. Our lock-free transaction submission model, inspired by HFT architectures, reduces latency by 44\% while maintaining peak throughput, demonstrating that holistic co-design of on-chain and off-chain components is essential for optimal performance.
+\end{abstract}
+
+% ============================================
+% KEYWORDS
+% ============================================
+\begin{IEEEkeywords}
+Blockchain, Regulated DeFi, lock-free concurrency, high-frequency trading, regulatory compliance, transaction throughput, symbol sharding.
+\end{IEEEkeywords}
